@@ -287,75 +287,86 @@
         }
 
         async function login() {
-            const u = document.getElementById('user').value.trim();
-            const p = document.getElementById('pass').value;
-            const remember = document.getElementById('rememberMe').checked;
+    const u = document.getElementById('user').value.trim();
+    const p = document.getElementById('pass').value;
+    const remember = document.getElementById('rememberMe').checked;
 
-            if(!u || !p) { alert("أدخل البيانات كاملة المتبقية"); return; }
-            const userSlug = u.toLowerCase().replace(/\s+/g, '');
+    if(!u || !p) { alert("أدخل البيانات كاملة المتبقية"); return; }
+    const userSlug = u.toLowerCase().replace(/\s+/g, '');
 
-            const { data, error } = await _supabase
-                .from('users')
-                .select('*')
-                .eq('username', userSlug)
-                .eq('password', p)
-                .maybeSingle();
+    const { data, error } = await _supabase
+        .from('users')
+        .select('*')
+        .eq('username', userSlug)
+        .eq('password', p)
+        .maybeSingle();
 
-            if (error || !data) {
-                alert("خطأ في بيانات الدخول، تأكد من المدخلات");
-            } else {
-                localStorage.setItem('isAuth', 'true');
-                localStorage.setItem('username', data.full_name);
-                localStorage.setItem('userNeighborhood', data.neighborhood);
-                
-                const dbArea = data.neighborhood ? data.neighborhood.trim().toLowerCase() : '';
-                if(dbArea === 'ادمن' || dbArea === 'admin') {
-                    localStorage.setItem('isAdmin', 'true');
-                } else {
-                    localStorage.setItem('isAdmin', 'false');
-                }
-
-                if (remember) {
-                    localStorage.setItem('rememberedUser', u);
-                    localStorage.setItem('rememberedPass', p);
-                } else {
-                    localStorage.removeItem('rememberedUser');
-                    localStorage.removeItem('rememberedPass');
-                }
-                
-                window.location.href = 'Chat_neighborhood.html';
-            }
+    if (error || !data) {
+        alert("خطأ في بيانات الدخول، تأكد من المدخلات");
+    } else {
+        localStorage.setItem('isAuth', 'true');
+        // تعديل 1: استخدام username بدلاً من full_name غير الموجود في الجدول
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('userNeighborhood', data.neighborhood);
+        
+        // تعديل 2: التحقق الصحيح من عمود is_admin (فحص قيمة yes)
+        const checkAdminStr = data.is_admin ? data.is_admin.trim().toLowerCase() : '';
+        if(checkAdminStr === 'yes') {
+            localStorage.setItem('isAdmin', 'true');
+        } else {
+            localStorage.setItem('isAdmin', 'false');
         }
 
-        async function register() {
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const phone = document.getElementById('regPhone').value.trim();
-            const area = document.getElementById('regArea').value;
-            const pass = document.getElementById('regPass').value;
-
-            if(!name || !email || !phone || !area || !pass) { alert("عبئ جميع الخانات المطلوبة"); return; }
-
-            const emailPattern = /^[a-z0-9._%+-]+@(gmail\.com|hotmail\.com)$/;
-            if(!emailPattern.test(email)) { alert("يجب التسجيل ببريد Gmail أو Hotmail فقط!"); return; }
-
-            const phonePattern = /^\d{10}$/;
-            if(!phonePattern.test(phone)) { alert("يجب أن يتكون رقم الجوال من 10 أرقام بالضبط!"); return; }
-
-            const userSlug = name.toLowerCase().replace(/\s+/g, '');
-
-            const { error } = await _supabase
-                .from('users')
-                .insert([{ username: userSlug, full_name: name, email: email, phone: phone, neighborhood: area, password: pass }]);
-
-            if(error) {
-                alert("خطأ أثناء التسجيل: " + error.message);
-            } else {
-                alert(`تم إنشاء حسابك بنجاح جاري!\nاسم المستخدم للدخول: ${userSlug}`);
-                toggleView('loginBox');
-                document.getElementById('user').value = userSlug;
-            }
+        if (remember) {
+            localStorage.setItem('rememberedUser', u);
+            localStorage.setItem('rememberedPass', p);
+        } else {
+            localStorage.removeItem('rememberedUser');
+            localStorage.removeItem('rememberedPass');
         }
+        
+        // التوجيه إلى الصفحة الرئيسية
+        window.location.href = 'Chat_neighborhood.html';
+    }
+}
+
+async function register() {
+    const name = document.getElementById('regName').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const phone = document.getElementById('regPhone').value.trim();
+    const area = document.getElementById('regArea').value;
+    const pass = document.getElementById('regPass').value;
+
+    if(!name || !email || !phone || !area || !pass) { alert("عبئ جميع الخانات المطلوبة"); return; }
+
+    const emailPattern = /^[a-z0-9._%+-]+@(gmail\.com|hotmail\.com)$/;
+    if(!emailPattern.test(email)) { alert("يجب التسجيل ببريد Gmail أو Hotmail فقط!"); return; }
+
+    const phonePattern = /^\d{10}$/;
+    if(!phonePattern.test(phone)) { alert("يجب أن يتكون رقم الجوال من 10 أرقام بالضبط!"); return; }
+
+    const userSlug = name.toLowerCase().replace(/\s+/g, '');
+
+    // تعديل 3: إدخال is_admin بـ "no" كقيمة افتراضية وإزالة full_name
+    const { error } = await _supabase
+        .from('users')
+        .insert([{ 
+            username: userSlug, 
+            email: email, 
+            phone: phone, 
+            neighborhood: area, 
+            password: pass,
+            is_admin: 'no' 
+        }]);
+
+    if(error) {
+        alert("خطأ أثناء التسجيل: " + error.message);
+    } else {
+        alert(`تم إنشاء حسابك بنجاح جاري!\nاسم المستخدم للدخول: ${userSlug}`);
+        toggleView('loginBox');
+        document.getElementById('user').value = userSlug;
+    }
+}
     </script>
 </body>
 </html>
