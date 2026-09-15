@@ -33,7 +33,6 @@
             flex-direction: column;
         }
 
-        /* الهيدر العلوي النظيف */
         .app-bar {
             background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(20px);
@@ -112,7 +111,6 @@
 
         .btn-logout:hover { background: #ef4444; color: white; }
 
-        /* حاوية التصميم المنتصفة بقالب الـ Dashboard */
         .wrapper {
             max-width: 850px;
             margin: 30px auto;
@@ -132,7 +130,6 @@
         .welcome-card h2 { margin: 0 0 8px 0; font-size: 26px; font-weight: 800; color: var(--text-title); }
         .welcome-card p { margin: 0; color: #64748b; font-size: 14px; }
 
-        /* قائمة التحكم الشبكية */
         .grid-menu {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -167,7 +164,6 @@
         .btn-two:hover { border-color: #60a5fa; box-shadow: 0 10px 25px -5px rgba(96, 165, 250, 0.15); }
         .btn-three:hover { border-color: var(--news-color); box-shadow: 0 10px 25px -5px rgba(192, 132, 252, 0.15); }
 
-        /* واجهات المحتوى وصناديق التغذية */
         .content-view {
             background: var(--surface-panel);
             backdrop-filter: blur(16px);
@@ -188,7 +184,6 @@
         .view-header h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--text-title); }
         .btn-back { color: var(--accent); cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; }
 
-        /* كروت العناصر المضافة */
         .item-card {
             background: rgba(15, 23, 42, 0.4);
             border: 1px solid rgba(255,255,255,0.04);
@@ -220,7 +215,6 @@
             margin-top: 5px;
         }
 
-        /* أدوات النماذج والإدخال */
         textarea, select.input-styled {
             width: 100%;
             padding: 14px;
@@ -259,7 +253,6 @@
 </head>
 <body>
 
-    <!-- العارضة العلوية للتطبيق -->
     <header class="app-bar">
         <div class="brand-section">
             <i class="fas fa-building-user"></i>
@@ -267,12 +260,11 @@
         </div>
         <div class="profile-area">
             <div id="navControl"></div>
-            <button class="btn-logout" onclick="localStorage.removeItem('isAuth'); location.href='index.html'">خروج</button>
+            <button class="btn-logout" onclick="localStorage.clear(); location.href='index.html'">خروج</button>
         </div>
     </header>
 
     <div class="wrapper">
-        <!-- لوحة التحكم الرئيسية واختيار الأنماط -->
         <div id="roleSelect">
             <div class="welcome-card">
                 <h2 id="welcomeUser">أهلاً بك جاري العزيز 👋</h2>
@@ -298,7 +290,6 @@
             </div>
         </div>
 
-        <!-- واجهة ساحة العرض (الفزعات) -->
         <div id="feedView" class="content-view hidden">
             <div class="view-header">
                 <h3 id="feedTitle">طلبات الفزعة الحالية</h3>
@@ -307,7 +298,6 @@
             <div id="requestsFeed"></div>
         </div>
 
-        <!-- واجهة إرسال طلب جديد -->
         <div id="requestView" class="content-view hidden">
             <div class="view-header">
                 <h3>تأكيد فزعة جديدة عاجلة</h3>
@@ -330,7 +320,6 @@
             <button class="btn-action-trigger" onclick="postNewRequest()">بث طلب المساعدة في الحي المختار</button>
         </div>
 
-        <!-- واجهة الأخبار والمستجدات -->
         <div id="newsView" class="content-view hidden">
             <div class="view-header">
                 <h3 id="newsTitle">تحديثات وأخبار الحي</h3>
@@ -358,8 +347,7 @@
         const uNeighborhood = localStorage.getItem('userNeighborhood');
         const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-        const checkAdminStr = uNeighborhood ? uNeighborhood.trim().toLowerCase() : '';
-        let activeArea = (checkAdminStr === 'ادمن' || checkAdminStr === 'admin') ? 'الفيصلية' : uNeighborhood; 
+        let activeArea = uNeighborhood || 'الفيصلية'; 
 
         function initPlatform() {
             document.getElementById('welcomeUser').innerText = isAdmin ? `مرحباً بك يا مدير النظام 👑` : `أهلاً يا ${uName} 👋`;
@@ -424,6 +412,11 @@
                     card.className = 'item-card faza-card';
                     const isYou = req.user_name === uName;
                     
+                    // استخراج وتنسيق رقم الهاتف تلقائياً من البيانات
+                    const rawPhone = req.phone ? req.phone.toString().trim() : '';
+                    const cleanPhone = rawPhone.replace(/^0/, ''); // إزالة الصفر في البداية لتوافق بادئة المملكة
+                    const whatsappUrl = cleanPhone ? `https://wa.me/966${cleanPhone}` : '#';
+
                     card.innerHTML = `
                         <div class="card-meta">
                             <span class="user-info"><i class="fas fa-circle-user"></i> ${req.user_name} ${isYou ? '<span style="color:var(--accent); font-size:12px;">(أنت)</span>' : ''}</span>
@@ -433,7 +426,7 @@
                             <span style="color:var(--text-title); font-weight:700;">التصنيف: ${req.request_type}</span>
                             ${req.details ? '<br><span style="font-size:14px; color:#94a3b8; display:block; margin-top:6px;">التفاصيل الإضافية: ' + req.details + '</span>' : ''}
                         </div>
-                        <a href="https://wa.me/966500000000" target="_blank" class="btn-whatsapp-connect">
+                        <a href="${whatsappUrl}" target="_blank" class="btn-whatsapp-connect" ${!cleanPhone ? 'onclick="alert(\'عذراً، رقم الجوال غير متوفر لهذا الطلب\'); return false;"' : ''}>
                             <i class="fab fa-whatsapp"></i> قبول الفزعة والتواصل المباشر
                         </a>
                     `;
@@ -483,17 +476,25 @@
                 details = textVal;
             }
 
-            const checkAdminStr = uNeighborhood ? uNeighborhood.trim().toLowerCase() : '';
-            const postArea = (checkAdminStr === 'ادمن' || checkAdminStr === 'admin') ? activeArea : uNeighborhood;
+            const postArea = isAdmin ? activeArea : uNeighborhood;
+            const userPhone = localStorage.getItem('userPhone');
 
             const { error } = await _supabase
                 .from('requests')
-                .insert([{ user_name: uName, request_type: type, details: details, neighborhood: postArea }]);
+                .insert([{ 
+                    user_name: uName, 
+                    phone: userPhone, 
+                    request_type: type, 
+                    details: details, 
+                    neighborhood: postArea 
+                }]);
 
             if (!error) {
                 alert("تم إرسال ونشر طلب فزعتك بنجاح في نظام الحي!");
                 document.getElementById('serviceDetails').value = "";
                 showView('feedView');
+            } else {
+                alert("خطأ أثناء إرسال الطلب: " + error.message);
             }
         }
 
@@ -501,17 +502,23 @@
             const content = document.getElementById('newsContent').value.trim();
             if(!content) { alert("عذراً، يجب كتابة نص الإعلان أو الخبر قبل البث!"); return; }
 
-            const checkAdminStr = uNeighborhood ? uNeighborhood.trim().toLowerCase() : '';
-            const postArea = (checkAdminStr === 'ادمن' || checkAdminStr === 'admin') ? activeArea : uNeighborhood;
+            const postArea = isAdmin ? activeArea : uNeighborhood;
 
             const { error } = await _supabase
                 .from('requests')
-                .insert([{ user_name: uName, request_type: '📢 خبر عام في الحي', details: content, neighborhood: postArea }]);
+                .insert([{ 
+                    user_name: uName, 
+                    request_type: '📢 خبر عام في الحي', 
+                    details: content, 
+                    neighborhood: postArea 
+                }]);
 
             if (!error) {
                 alert("تم تعميم وبث الخبر لجميع سكان الحي بنجاح! 📢");
                 document.getElementById('newsContent').value = "";
                 loadAreaNews();
+            } else {
+                alert("خطأ أثناء نشر الخبر: " + error.message);
             }
         }
 
