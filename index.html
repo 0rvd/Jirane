@@ -21,16 +21,16 @@
         body {
             font-family: 'Tajawal', sans-serif;
             background: var(--bg-gradient);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
+            padding: 20px 0;
             color: var(--text-main);
-            overflow: hidden;
+            box-sizing: border-box;
         }
 
-        /* شريط اختيار اللغة أعلى الشاشة */
         .lang-picker-container {
             position: absolute;
             top: 20px;
@@ -88,7 +88,6 @@
 </head>
 <body>
 
-    <!-- أداة الترجمة أعلى الصفحة -->
     <div class="lang-picker-container">
         <div id="google_translate_element"></div>
     </div>
@@ -146,7 +145,6 @@
         </div>
     </div>
 
-    <!-- سكريبت قوقل للترجمة -->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
@@ -156,9 +154,10 @@
             }, 'google_translate_element');
         }
     </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
+        // تنبيه: ينبغي استبدال SUPABASE_ANON_KEY بالمفتاح الخاص بمشروعك (JWT Format)
         const SUPABASE_URL = 'https://fdmzvtypxfoexjcwfnzq.supabase.co'; 
         const SUPABASE_ANON_KEY = 'sb_publishable_ZS0QXq2GkYayJ5abz8vLfg_YSFqKAhi';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
