@@ -9,81 +9,128 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-gradient: radial-gradient(circle at top left, #1e1b4b 0%, #0f172a 40%, #020617 100%);
-            --primary: #38bdf8;
-            --primary-glow: rgba(56, 189, 248, 0.3);
-            --surface: rgba(15, 23, 42, 0.6);
-            --border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --primary: #38bdf8;
+    --text-main: #f8fafc;
+    --border-color: #334155;
+}
 
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background: var(--bg-gradient);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            padding: 20px 0;
-            color: var(--text-main);
-            box-sizing: border-box;
-        }
+body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    min-height: 100vh; 
+    margin: 0; 
+    padding: 20px; 
+    box-sizing: border-box;
+    position: relative;
+}
 
-        .lang-picker-container {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-        }
+/* ضبط موقع ترجمة قوقل أعلى اليسار */
+.lang-picker-container {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000;
+}
 
-        .auth-container {
-            position: relative;
-            z-index: 1;
-            background: var(--surface);
-            backdrop-filter: blur(24px);
-            padding: 40px 35px;
-            border-radius: 30px;
-            border: 1px solid var(--border);
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            box-sizing: border-box;
-        }
+.auth-container {
+    background-color: var(--card-bg);
+    padding: 35px 30px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    width: 100%; 
+    max-width: 400px; 
+    text-align: center;
+    box-sizing: border-box;
+}
 
-        .brand-header { text-align: center; margin-bottom: 35px; }
-        .brand-logo {
-            width: 65px; height: 65px;
-            background: linear-gradient(135deg, #3b82f6, var(--primary));
-            border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; color: #020617; margin: 0 auto 15px;
-        }
+.brand-logo i { 
+    font-size: 42px; 
+    color: var(--primary); 
+    margin-bottom: 10px; 
+}
 
-        .brand-header h1 { font-size: 26px; font-weight: 900; margin: 0; }
-        .brand-header p { color: var(--text-muted); font-size: 14px; margin: 5px 0 0; }
+.brand-header h1 { 
+    font-size: 24px; 
+    margin: 0; 
+}
 
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 18px; }
+.brand-header p { 
+    font-size: 13px; 
+    color: #94a3b8; 
+    margin-top: 5px; 
+    margin-bottom: 25px; 
+}
 
-        input, select {
-            width: 100%; padding: 14px 48px 14px 16px;
-            background: rgba(2, 6, 23, 0.4); border: 1px solid var(--border);
-            border-radius: 16px; color: var(--text-main); font-family: 'Tajawal', sans-serif;
-            font-size: 15px; outline: none; box-sizing: border-box;
-        }
+/* ضبط الحقول مع الأيقونات بداخلها */
+.input-group { 
+    position: relative; 
+    margin-bottom: 15px; 
+    display: flex;
+    align-items: center;
+}
 
-        .btn-submit {
-            width: 100%; padding: 15px;
-            background: linear-gradient(135deg, var(--primary) 0%, #0284c7 100%);
-            border: none; border-radius: 16px; color: #020617;
-            font-family: 'Tajawal', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer;
-        }
+.input-group i { 
+    position: absolute; 
+    right: 15px; 
+    color: #94a3b8; 
+    font-size: 16px;
+    pointer-events: none;
+}
 
-        .toggle-link { text-align: center; margin-top: 25px; font-size: 14px; color: var(--text-muted); }
-        .toggle-link span { color: var(--primary); cursor: pointer; font-weight: 600; text-decoration: underline; }
-        .hidden { display: none !important; }
+input, select {
+    width: 100%; 
+    padding: 12px 42px 12px 15px; /* مساحة للأيقونة على اليمين */
+    background-color: #0f172a; 
+    color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px; 
+    box-sizing: border-box; 
+    outline: none;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.btn-submit {
+    width: 100%; 
+    padding: 12px;
+    background-color: var(--primary); 
+    color: #0f172a;
+    border: none; 
+    border-radius: 8px;
+    font-weight: bold; 
+    font-size: 15px;
+    cursor: pointer; 
+    margin-top: 10px;
+}
+
+.toggle-link { 
+    margin-top: 20px; 
+    font-size: 13px; 
+    color: #94a3b8; 
+}
+
+.toggle-link span { 
+    color: var(--primary); 
+    cursor: pointer; 
+    font-weight: bold;
+    text-decoration: underline; 
+}
+
+.hidden { 
+    display: none !important; 
+}
     </style>
 </head>
 <body>
