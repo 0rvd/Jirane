@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جيراني - طلبات الفزعة</title>
+    <title>جيراني - طلبات </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -81,7 +81,6 @@
             <span>جـيـراني</span>
         </div>
         <div class="profile-area">
-            <!-- خيار اللغة -->
             <div id="google_translate_element"></div>
             <button class="btn-logout" onclick="localStorage.clear(); location.href='index.html'">خروج</button>
         </div>
@@ -92,61 +91,49 @@
             <div class="grid-menu">
                 <div class="panel-btn" onclick="showView('feedView')">
                     <i class="fas fa-hand-holding-hand" style="font-size:32px; color: var(--accent);"></i>
-                    <h3 style="margin:0; color:white;">ساحة الفزعات والطلبات</h3>
+                    <h3 style="margin:0; color:white;">الطلبات الحالية</h3>
                     <p style="margin:0; font-size:13px; color:#94a3b8;">تصفح واقبل الطلبات المتاحة لخدمة جيرانك</p>
                 </div>
                 <div class="panel-btn" onclick="showView('requestView')">
                     <i class="fas fa-paper-plane" style="font-size:32px; color: #60a5fa;"></i>
                     <h3 style="margin:0; color:white;">طلب مساعدة جديدة</h3>
-                    <p style="margin:0; font-size:13px; color:#94a3b8;">اطلب فزعة عاجلة ليصل طلبك لسكان الحي</p>
+                    <p style="margin:0; font-size:13px; color:#94a3b8;">اطلب مساعدة عاجلة ليصل طلبك لسكان الحي</p>
                 </div>
             </div>
         </div>
 
-        <!-- قائمة الفزعات والقبول -->
         <div id="feedView" class="content-view hidden">
             <div class="view-header">
-                <h3>طلبات الفزعة القائمة</h3>
+                <h3>قائمة الطلبات الحالية  </h3>
                 <span onclick="backToRoles()" style="color:var(--accent); cursor:pointer;"><i class="fas fa-arrow-left"></i> العودة</span>
             </div>
             <div id="requestsFeed"></div>
         </div>
 
-        <!-- إنشاء طلب جديد -->
         <div id="requestView" class="content-view hidden">
             <div class="view-header">
-                <h3>تأكيد فزعة جديدة</h3>
+                <h3> انشاء طلب مساعدة </h3>
                 <span onclick="backToRoles()" style="color:var(--accent); cursor:pointer;"><i class="fas fa-arrow-left"></i> العودة</span>
             </div>
             
             <label>اختر نوع المساعدة:</label>
             <select id="serviceType" class="input-styled" onchange="checkCategory()">
                 <option value="🚗 تعطل سيارة / اشتراك بطارية">🚗 تعطل سيارة / اشتراك بطارية</option>
-                <option value="🛠 فزعة سباكة / كهرباء طارئة">🛠 فزعة سباكة / كهرباء طارئة</option>
+                <option value="🛠 مشكلة سباكة / كهرباء طارئة">🛠 مشكلة سباكة / كهرباء طارئة</option>
                 <option value="📦 نقل وتنزيل أغراض ثقيلة">📦 نقل وتنزيل أغراض ثقيلة</option>
-                <option value="🛒 توصيل مقاضي عاجلة للبيت">🛒 توصيل مقاضي عاجلة للبيت</option>
-                <option value="أخرى">❓ طلب مخصص آخر</option>
+                <option value="🛒 توصيل مقاضي  للبيت">🛒 توصيل مقاضي  للبيت</option>
+                <option value="أخرى">❓ أخرى  </option>
             </select>
             
             <div id="specialDetailsBox" class="hidden">
-                <textarea id="serviceDetails" placeholder="اكتب تفاصيل طلب المساعدة والموقع..."></textarea>
+                <textarea id="serviceDetails" placeholder="اكتب تفاصيل طلب المساعدة ..."></textarea>
             </div>
 
             <button class="btn-action-trigger" onclick="postNewRequest()">بث طلب المساعدة</button>
         </div>
     </div>
 
-    <!-- سكريبت قوقل للترجمة -->
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ar',
-                includedLanguages: 'ar,en',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
 
     <script>
         const SUPABASE_URL = 'https://fdmzvtypxfoexjcwfnzq.supabase.co'; 
@@ -209,7 +196,7 @@
 
         async function postNewRequest() {
             const type = document.getElementById('serviceType').value;
-            let details = "طلب فزعة طارئ ومستعجل";
+            let details = "طلب  طارئ ومستعجل";
 
             if(type === 'أخرى') {
                 const textVal = document.getElementById('serviceDetails').value.trim();
