@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+   
+<!-- CSS Colors -->
     <style>
         :root {
     --bg-color: #0f172a;
@@ -30,7 +32,7 @@ body {
     position: relative;
 }
 
-/* ضبط موقع ترجمة قوقل أعلى اليسار */
+/* Google Translate */
 .lang-picker-container {
     position: fixed;
     top: 15px;
@@ -67,7 +69,7 @@ body {
     margin-bottom: 25px; 
 }
 
-/* ضبط الحقول مع الأيقونات بداخلها */
+
 .input-group { 
     position: relative; 
     margin-bottom: 15px; 
@@ -85,7 +87,7 @@ body {
 
 input, select {
     width: 100%; 
-    padding: 12px 42px 12px 15px; /* مساحة للأيقونة على اليمين */
+    padding: 12px 42px 12px 15px; 
     background-color: #0f172a; 
     color: white;
     border: 1px solid var(--border-color);
@@ -141,7 +143,7 @@ select {
 
     <div class="auth-container">
         <div class="brand-header">
-            <div class="brand-logo"><i class="fas fa-users-viewfinder"></i></div>
+            <div class="brand-logo"><i class="fa-solid fa-people-carry-box"></i></div>
             <h1>جـيـراني • Jirane</h1>
             <p id="brandSub">منصتك الحية للتكافل والخدمات السريعة</p>
         </div>
@@ -155,7 +157,7 @@ select {
                 <input type="password" id="pass" placeholder="كلمة المرور">
                 <i class="fas fa-lock"></i>
             </div>
-            <button class="btn-submit" onclick="login()">دخول آمن</button>
+            <button class="btn-submit" onclick="login()">تسجيل االدخول </button>
             <div class="toggle-link">ليس لديك حساب؟ <span onclick="toggleView('signupBox')">سجل الآن</span></div>
         </div>
 
@@ -204,7 +206,7 @@ select {
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
-        // تنبيه: ينبغي استبدال SUPABASE_ANON_KEY بالمفتاح الخاص بمشروعك (JWT Format)
+        // Supabase Keys
         const SUPABASE_URL = 'https://fdmzvtypxfoexjcwfnzq.supabase.co'; 
         const SUPABASE_ANON_KEY = 'sb_publishable_ZS0QXq2GkYayJ5abz8vLfg_YSFqKAhi';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -224,7 +226,8 @@ select {
             const { data, error } = await _supabase.from('users').select('*').eq('username', userSlug).eq('password', p).maybeSingle();
 
             if (error || !data) {
-                alert("خطأ في بيانات الدخول");
+                alert("اسم المستخدم أو كلمة المرور غير صحيحة ");
+                
             } else {
                 localStorage.setItem('isAuth', 'true');
                 localStorage.setItem('username', data.username);
